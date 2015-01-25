@@ -27,7 +27,7 @@ Configuration options
 
 + outputDirectory (File) - The directory for compiled javascript templates. 
 + sourceDirectory (File) - The source directory containing the template sources.
-+ includes (String[]) - List of files to include. Specified as fileset patterns which are relative to the source directory. Default value is: { "**\/*.html" }
++ includes (String[]) - List of files to include. Specified as fileset patterns which are relative to the source directory. Default value is: { "**/*.html" }
 + excludes (String[]) - List of files to exclude. Specified as fileset patterns which are relative to the source directory.
 + force (boolean) - When true forces the Dust.js compiler to always compile the HTML templates. By default templates are only compiled when modified or the compliled javascript template does not exists. Default value is: false.
 + dustVersion (String) - Dust.js compiler version. Default value is dust-full-2.5.1.js
@@ -47,11 +47,20 @@ License of the original source by Dan Monroe is unknown. Use and modify at your 
 Usage
 -----
 
-Install to your maven repository:
+Install to your local maven repository:
 
     git clone https://github.com/patchpump/dustjs-maven-plugin.git
     cd dustjs-maven-plugin
     mvn clean install 
+
+Alternatively add this github maven repository:
+
+    <repositories>
+        <repository>
+            <id>dustjs-maven-plugin-mvn-repo</id>
+            <url>https://raw.github.com/patchpump/dustjs-maven-plugin/mvn-repo/</url>
+        </repository>
+    </repositories>
 
 Example pom.xml configuration:
 
@@ -60,7 +69,7 @@ Example pom.xml configuration:
 	    <artifactId>dust-maven-plugin</artifactId>
 	    <version>2.5.1</version>
 	    <configuration>
-	        <sourceDirectory>src/main/webapp/templates/dust/source</sourceDirectory>
+	        <sourceDirectory>src/main/webapp/templates/dust/src</sourceDirectory>
 	        <outputDirectory>src/main/webapp/templates/dust/js</outputDirectory>
           <includes>
             <include>**/*.html</include>
