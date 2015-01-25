@@ -49,9 +49,9 @@ Usage
 
 Install to your maven repository:
 
-git clone https://github.com/patchpump/dustjs-maven-plugin.git
-cd dustjs-maven-plugin
-mvn clean install 
+    git clone https://github.com/patchpump/dustjs-maven-plugin.git
+    cd dustjs-maven-plugin
+    mvn clean install 
 
 Example pom.xml configuration:
 
