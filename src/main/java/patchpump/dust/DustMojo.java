@@ -23,6 +23,8 @@ import java.util.Arrays;
 @Mojo( name = "war", defaultPhase = LifecyclePhase.PACKAGE )
 public class DustMojo extends AbstractMojo {
 
+	public final static String DEFAULT_COMPILER_VERSION = "dust-full-2.7.2.js";
+	
 	/**
 	 * The source directory containing the HTML template sources.
 	 */
@@ -57,7 +59,7 @@ public class DustMojo extends AbstractMojo {
 	 * Dust.js version.
 	 */
 	@Parameter( property = "dustVersion", required = false )
-	private String dustVersion = "dust-full-2.5.1.js";
+	private String dustVersion = DEFAULT_COMPILER_VERSION;
 
 	@Component
 	protected BuildContext buildContext;
@@ -97,7 +99,7 @@ public class DustMojo extends AbstractMojo {
 			}
 
 			try {
-				dustCompiler = new DustCompiler();
+				dustCompiler = new DustCompiler(dustVersion);
 			} catch (FileNotFoundException e) {
 				throw new MojoExecutionException("Dust.js compiler could not find the javascript compiler file. " + e.getMessage(), e);
 			} catch (ScriptException e) {
@@ -143,6 +145,6 @@ public class DustMojo extends AbstractMojo {
 				}
 			}
 		}
-		getLog().info("\n\nDust.s compilation finished in " + (System.currentTimeMillis() - start) + " ms\n");
+		getLog().info("\n\nDust.js compilation finished in " + (System.currentTimeMillis() - start) + " ms\n");
 	}
 }
