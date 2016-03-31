@@ -23,10 +23,11 @@ public class DustCompiler {
 	private ScriptEngine jsEngine = mgr.getEngineByName("JavaScript");
 	Invocable invocable;
 
-	String dustFilename = "META-INF/dust-full-2.5.1.js";
+	final String dustFilename;
 
-	public DustCompiler() throws IOException, ScriptException {
+	public DustCompiler(String dustVersion) throws IOException, ScriptException {
 
+		dustFilename = "META-INF/" + dustVersion;
 		ClassLoader loader = getClass().getClassLoader();
 		URL resource = loader.getResource(dustFilename);
 
