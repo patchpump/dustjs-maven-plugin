@@ -1,5 +1,9 @@
 # Minify Maven Plugin
 
+## 2.7.5-PATCHPUMP-R3
+
+* DustMojo marked @threadSafe
+
 ## 2.7.5-PATCHPUMP-R2
 
 * Only create DustCompiler if needed

@@ -19,7 +19,7 @@ import java.util.Arrays;
  *
  * @author Dan Monroe
  */
-@Mojo( name = "war", defaultPhase = LifecyclePhase.PACKAGE )
+@Mojo( name = "war", defaultPhase = LifecyclePhase.PACKAGE, threadSafe = true)
 public class DustMojo extends AbstractMojo {
 
 	public final static String DEFAULT_COMPILER_VERSION = "dust-full-2.7.5.js";
