@@ -32,25 +32,6 @@ Configuration options
 + force (boolean) - When true forces the Dust.js compiler to always compile the HTML templates. By default templates are only compiled when modified or the compliled javascript template does not exists. Default value is: false.
 + dustVersion (String) - Dust.js compiler version. Default value is dust-full-2.7.5.js
 
-Changes from 2.7.2
-------------------
-
-+ Changed to Dust.js 2.7.5 (LinkedIn)
-+ DustCompiler failed to load Nashorn on OpenJDK 10
-+ Added Dust.js license
-
-Changes from 2.5.2
-------------------
-
-+ Changed to Dust.js 2.7.2 (LinkedIn)
-
-Changes from 1.2.2
-------------------
-
-+ Changed to Dust.js 2.5.1 (LinkedIn)
-+ Changed Mojo goal to war from compile for invocation from maven-war-plugin
-+ Added configuration option dustVersion
-
 License
 -------
 
