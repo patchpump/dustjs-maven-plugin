@@ -1,7 +1,7 @@
 dustjs-maven-plugin
 ===================
 
-Maven plugin for the Linkedin version of Dust.js
+Maven plugin for the LinkedIn version of Dust.js
 
 This plugin will precompile Dust.js templates into their javascript format for use in your projects.
 
@@ -60,7 +60,7 @@ Example pom.xml configuration:
     <plugin>
 	    <groupId>patchpump.dust</groupId>
 	    <artifactId>dust-maven-plugin</artifactId>
-	    <version>2.7.5</version>
+	    <version>2.7.5-PATCHPUMP-R3</version>
 	    <configuration>
 	        <sourceDirectory>src/main/webapp/templates/dust/src</sourceDirectory>
 	        <outputDirectory>src/main/webapp/templates/dust/js</outputDirectory>
