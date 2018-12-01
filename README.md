@@ -60,7 +60,7 @@ Example pom.xml configuration:
     <plugin>
 	    <groupId>patchpump.dust</groupId>
 	    <artifactId>dust-maven-plugin</artifactId>
-	    <version>2.7.5-PATCHPUMP-R3</version>
+	    <version>2.7.5-PATCHPUMP-R4</version>
 	    <configuration>
 	        <sourceDirectory>src/main/webapp/templates/dust/src</sourceDirectory>
 	        <outputDirectory>src/main/webapp/templates/dust/js</outputDirectory>

@@ -99,15 +99,13 @@ public class DustMojo extends AbstractMojo {
 			File output = new File(outputDirectory, file.replace(".html", ".js"));
 			buildContext.removeMessages(input);
 
-			if (!output.getParentFile().exists() && !output.getParentFile().mkdirs()) {
+			if (!output.getParentFile().exists() && !output.getParentFile().mkdirs())
 				throw new MojoExecutionException("Cannot create output directory " + output.getParentFile());
-			}
 
 			try {
-				DustSource dustSource = new DustSource(input);
-				if (dustSource.getLastModified() > output.lastModified()) {
+				if (input.lastModified() > output.lastModified()) {
 					getLog().info("Compiling Dust.js template source: " + file);
-					getCompiler().compileAndSave(dustSource, output, force);
+					getCompiler().compileAndSave(input, output, force);
 					buildContext.refresh(output);
 				}
 				
