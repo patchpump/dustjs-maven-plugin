@@ -13,7 +13,7 @@ This will place a corresponding .js file into the outputDirectory.
 
 You can now just include this script onto your page and render it where needed.
 
-    <script type="text/javascript" src="/scripts/dust-core-2.7.2.min.js"></script>
+    <script type="text/javascript" src="/scripts/dust-core-2.7.5.min.js"></script>
     <script type="text/javascript" src="/scripts/templates/dust/js/calendar_event_template.js"></script>
     
 in javascript, after you have retrieved some sort of json object, objMyEvents in this case, call dust.render with the data you want to display:
@@ -30,12 +30,24 @@ Configuration options
 + includes (String[]) - List of files to include. Specified as fileset patterns which are relative to the source directory. Default value is: { "\*\*/\*.html" }
 + excludes (String[]) - List of files to exclude. Specified as fileset patterns which are relative to the source directory.
 + force (boolean) - When true forces the Dust.js compiler to always compile the HTML templates. By default templates are only compiled when modified or the compliled javascript template does not exists. Default value is: false.
-+ dustVersion (String) - Dust.js compiler version. Default value is dust-full-2.7.2.js
++ dustVersion (String) - Dust.js compiler version. Default value is dust-full-2.7.5.js
+
+Changes from 2.7.2
+------------------
+
++ Changed to Dust.js 2.7.5 (LinkedIn)
++ DustCompiler failed to load Nashorn on OpenJDK 10
++ Added Dust.js license
+
+Changes from 2.5.2
+------------------
+
++ Changed to Dust.js 2.7.2 (LinkedIn)
 
 Changes from 1.2.2
 ------------------
 
-+ Changed to Dust.js 2.5.1 (linkiedin)
++ Changed to Dust.js 2.5.1 (LinkedIn)
 + Changed Mojo goal to war from compile for invocation from maven-war-plugin
 + Added configuration option dustVersion
 
@@ -67,7 +79,7 @@ Example pom.xml configuration:
     <plugin>
 	    <groupId>patchpump.dust</groupId>
 	    <artifactId>dust-maven-plugin</artifactId>
-	    <version>2.7.2-R1</version>
+	    <version>2.7.5</version>
 	    <configuration>
 	        <sourceDirectory>src/main/webapp/templates/dust/src</sourceDirectory>
 	        <outputDirectory>src/main/webapp/templates/dust/js</outputDirectory>
