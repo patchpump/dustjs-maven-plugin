@@ -11,7 +11,6 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 
 import javax.script.ScriptException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -23,7 +22,7 @@ import java.util.Arrays;
 @Mojo( name = "war", defaultPhase = LifecyclePhase.PACKAGE )
 public class DustMojo extends AbstractMojo {
 
-	public final static String DEFAULT_COMPILER_VERSION = "dust-full-2.7.2.js";
+	public final static String DEFAULT_COMPILER_VERSION = "dust-full-2.7.5.js";
 	
 	/**
 	 * The source directory containing the HTML template sources.
@@ -80,71 +79,51 @@ public class DustMojo extends AbstractMojo {
 	}
 
 	public void execute() throws MojoExecutionException {
+
 		long start = System.currentTimeMillis();
-
-		if (getLog().isDebugEnabled()) {
-			getLog().debug("sourceDirectory = " + sourceDirectory);
-			getLog().debug("outputDirectory = " + outputDirectory);
-			getLog().debug("includes = " + Arrays.toString(includes));
-			getLog().debug("excludes = " + Arrays.toString(excludes));
-		}
-
 		String[] files = getIncludedFiles();
 
-		if (files == null || files.length < 1) {
-			getLog().info("Nothing to compile - no Dust.js template sources found");
-		} else {
-			if (getLog().isDebugEnabled()) {
-				getLog().debug("included files = " + Arrays.toString(files));
+		if (getLog().isDebugEnabled()) {
+			getLog().debug("sourceDirectory: " + sourceDirectory);
+			getLog().debug("outputDirectory: " + outputDirectory);
+			getLog().debug("includes: " + Arrays.toString(includes));
+			getLog().debug("excludes: " + Arrays.toString(excludes));
+			getLog().debug("includedFiles: " + Arrays.toString(files));
+		}
+
+		if (files == null || files.length < 1)
+			return;
+		
+		try {
+			dustCompiler = new DustCompiler(dustVersion);
+		} catch (IOException|ScriptException e) {
+			throw new MojoExecutionException("Dust.js compiler failed: " + e.getMessage(), e);
+		}
+
+		for (String file : files) {
+			File input = new File(sourceDirectory, file);
+			buildContext.removeMessages(input);
+
+			File output = new File(outputDirectory, file.replace(".html", ".js"));
+
+			if (!output.getParentFile().exists() && !output.getParentFile().mkdirs()) {
+				throw new MojoExecutionException("Cannot create output directory " + output.getParentFile());
 			}
 
 			try {
-				dustCompiler = new DustCompiler(dustVersion);
-			} catch (FileNotFoundException e) {
-				throw new MojoExecutionException("Dust.js compiler could not find the javascript compiler file. " + e.getMessage(), e);
-			} catch (ScriptException e) {
-				throw new MojoExecutionException("Dust.js compiler threw ScriptException. " + e.getMessage(), e);
-			} catch (IOException e) {
-				throw new MojoExecutionException("Dust.js compiler threw IOException. " + e.getMessage(), e);
-			}
-
-			for (String file : files) {
-				File input = new File(sourceDirectory, file);
-				buildContext.removeMessages(input);
-
-				File output = new File(outputDirectory, file.replace(".html", ".js"));
-
-				if (!output.getParentFile().exists() && !output.getParentFile().mkdirs()) {
-					throw new MojoExecutionException("Cannot create output directory " + output.getParentFile());
+				DustSource dustSource = new DustSource(input);
+				if (output.lastModified() < dustSource.getLastModified()) {
+					getLog().info("Compiling Dust.js template source: " + file);
+					dustCompiler.compileAndSave(dustSource, output, force);
+					buildContext.refresh(output);
 				}
-
-				try {
-					DustSource dustSource = new DustSource(input);
-
-					if (output.lastModified() < dustSource.getLastModified()) {
-						getLog().info("Compiling Dust.js template source: " + file );
-						dustCompiler.compileAndSave(dustSource, output, force);
-
-						buildContext.refresh(output);
-					} else {
-						getLog().info("Bypassing Dust.js template source: " + file + " (not modified)");
-					}
-					
-				} catch (FileNotFoundException e) {
-					buildContext.addMessage(input, 0, 0, "Error compiling Dust.js template source", BuildContext.SEVERITY_ERROR, e);
-					throw new MojoExecutionException("Error while compiling Dust.js source: " + file, e);
-				} catch (ScriptException e) {
-					buildContext.addMessage(input, 0, 0, "Error compiling Dust.js template source", BuildContext.SEVERITY_ERROR, e);
-					throw new MojoExecutionException("Error while compiling Dust.js source: " + file, e);
-				} catch (NoSuchMethodException e) {
-					buildContext.addMessage(input, 0, 0, "Error compiling Dust.js template source", BuildContext.SEVERITY_ERROR, e);
-					throw new MojoExecutionException("Error while compiling Dust.js source: " + file, e);
-				} catch (IOException e) {
-					buildContext.addMessage(input, 0, 0, "Error compiling Dust.js template source", BuildContext.SEVERITY_ERROR, e);
-					throw new MojoExecutionException("Error while compiling Dust.js source: " + file, e);
-				}
+				
+			} catch (ScriptException|NoSuchMethodException|IOException e) {
+				buildContext.addMessage(input, 0, 0, "Error compiling Dust.js template source", BuildContext.SEVERITY_ERROR, e);
+				throw new MojoExecutionException("Error while compiling Dust.js source: " + file, e);
 			}
 		}
+
 		getLog().info("\n\nDust.js compilation finished in " + (System.currentTimeMillis() - start) + " ms\n");
 	}
 }

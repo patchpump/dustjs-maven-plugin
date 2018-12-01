@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,27 +18,19 @@ import java.net.URL;
  * Time: 3:14 PM
  */
 public class DustCompiler {
-	private ScriptEngineManager mgr = new ScriptEngineManager();
-	private ScriptEngine jsEngine = mgr.getEngineByName("JavaScript");
-	Invocable invocable;
 
-	final String dustFilename;
+	private ScriptEngineManager mgr = new ScriptEngineManager(null);
+	private ScriptEngine jsEngine = mgr.getEngineByName("JavaScript");
+	private Invocable invocable;
 
 	public DustCompiler(String dustVersion) throws IOException, ScriptException {
 
-		dustFilename = "META-INF/" + dustVersion;
-		ClassLoader loader = getClass().getClassLoader();
-		URL resource = loader.getResource(dustFilename);
-
-		InputStreamReader inputStreamReader = new InputStreamReader(resource.openConnection().getInputStream());
-
-		try {
+		String dustFilename = "/META-INF/" + dustVersion;
+		try(InputStreamReader inputStreamReader = new InputStreamReader(DustCompiler.class.getResourceAsStream(dustFilename))) {
 			jsEngine.eval(inputStreamReader);
-		} finally {
-			inputStreamReader.close();
 		}
 
-		invocable = (Invocable) jsEngine;
+		invocable = (Invocable)jsEngine;
 	}
 
 	public String compile(DustSource sourceFile) throws FileNotFoundException, ScriptException, NoSuchMethodException {
