@@ -94,17 +94,10 @@ public class DustMojo extends AbstractMojo {
 		if (files == null || files.length < 1)
 			return;
 		
-		try {
-			dustCompiler = new DustCompiler(dustVersion);
-		} catch (IOException|ScriptException e) {
-			throw new MojoExecutionException("Dust.js compiler failed: " + e.getMessage(), e);
-		}
-
 		for (String file : files) {
 			File input = new File(sourceDirectory, file);
-			buildContext.removeMessages(input);
-
 			File output = new File(outputDirectory, file.replace(".html", ".js"));
+			buildContext.removeMessages(input);
 
 			if (!output.getParentFile().exists() && !output.getParentFile().mkdirs()) {
 				throw new MojoExecutionException("Cannot create output directory " + output.getParentFile());
@@ -112,9 +105,9 @@ public class DustMojo extends AbstractMojo {
 
 			try {
 				DustSource dustSource = new DustSource(input);
-				if (output.lastModified() < dustSource.getLastModified()) {
+				if (dustSource.getLastModified() > output.lastModified()) {
 					getLog().info("Compiling Dust.js template source: " + file);
-					dustCompiler.compileAndSave(dustSource, output, force);
+					getCompiler().compileAndSave(dustSource, output, force);
 					buildContext.refresh(output);
 				}
 				
@@ -124,6 +117,16 @@ public class DustMojo extends AbstractMojo {
 			}
 		}
 
-		getLog().info("\n\nDust.js compilation finished in " + (System.currentTimeMillis() - start) + " ms\n");
+		getLog().info("Dust.js compilation finished in " + (System.currentTimeMillis() - start) + " ms");
+	}
+	
+	private DustCompiler getCompiler() throws MojoExecutionException {
+		try {
+			if (dustCompiler == null)
+				dustCompiler = new DustCompiler(dustVersion);
+		} catch (IOException|ScriptException e) {
+			throw new MojoExecutionException("Dust.js compiler failed: " + e.getMessage(), e);
+		}
+		return dustCompiler;
 	}
 }
