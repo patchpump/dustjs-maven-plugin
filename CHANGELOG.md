@@ -1,5 +1,9 @@
 # Minify Maven Plugin
 
+## 2.7.5-PATCHPUMP-R5
+
+* Added verbose option for listing individual template filenames
+
 ## 2.7.5-PATCHPUMP-R4
 
 * Dust.js script is now compiled once and re-used

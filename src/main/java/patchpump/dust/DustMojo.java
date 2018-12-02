@@ -55,6 +55,12 @@ public class DustMojo extends AbstractMojo {
 	private boolean force;
 
 	/**
+	 * Enable loud output.
+	 */
+	@Parameter( defaultValue = "false", property = "verbose", required = false )
+	private boolean verbose;
+
+	/**
 	 * Dust.js version.
 	 */
 	@Parameter( property = "dustVersion", required = false )
@@ -83,17 +89,19 @@ public class DustMojo extends AbstractMojo {
 		long start = System.currentTimeMillis();
 		String[] files = getIncludedFiles();
 
-		if (getLog().isDebugEnabled()) {
-			getLog().debug("sourceDirectory: " + sourceDirectory);
-			getLog().debug("outputDirectory: " + outputDirectory);
-			getLog().debug("includes: " + Arrays.toString(includes));
-			getLog().debug("excludes: " + Arrays.toString(excludes));
-			getLog().debug("includedFiles: " + Arrays.toString(files));
+		if (verbose) {
+			getLog().info("sourceDirectory: " + sourceDirectory);
+			getLog().info("outputDirectory: " + outputDirectory);
+			getLog().info("includes: " + Arrays.toString(includes));
+			getLog().info("excludes: " + Arrays.toString(excludes));
+			getLog().info("includedFiles: " + Arrays.toString(files));
 		}
+		
+		getLog().info("Dust.js compiling " + files.length + " templates in " + sourceDirectory.getPath());
 
 		if (files == null || files.length < 1)
 			return;
-		
+
 		for (String file : files) {
 			File input = new File(sourceDirectory, file);
 			File output = new File(outputDirectory, file.replace(".html", ".js"));
@@ -104,7 +112,8 @@ public class DustMojo extends AbstractMojo {
 
 			try {
 				if (input.lastModified() > output.lastModified()) {
-					getLog().info("Compiling Dust.js template source: " + file);
+					if (verbose)
+						getLog().info("Dust.js compiling template source: " + file);
 					getCompiler().compileAndSave(input, output, force);
 					buildContext.refresh(output);
 				}
